@@ -1,67 +1,170 @@
-//global functions
-//turning right (+) or left (-)
-int turn (double degrees) {
-set_create_angle(0);
-double createAngle = get_create_angle(0);
-if (degrees > 0) {
-	while (createAngle < degrees) {
-		create_drive_direct(50, -50);
-msleep(100); //might need to adjust interval depending on accuracy
-create_stop();
-createAngle = get_create_distance(0);
-}
-} 
-else if (degrees  == 0) {
-printf("did you mean to turn 0 degrees?");
-}
-else {
-	double negativeDeg = -1*degrees
-while (createAngle < negativeDeg) {
-create_drive_direct(-50, 50); //vs might need to change to go straight
-msleep(100);
-create_stop();
-createAngle = get_create_distance(0);
-}
+#include <kipr/botball.h>
+
+void Forward (double distance) {
+    set_create_distance(0);
+    double actualDIST = 0;
+    while (actualDIST<distance) {
+        create_drive_direct(70, 70);
+        msleep(50);
+        //printf("%lf\n", actualDIST);
+        actualDIST=(double) get_create_distance();
+    }   
+    printf("final distance is :%lf\n", actualDIST);
 }
 
-return 0; }
-//moving straight forward (+) or backward (-)
-int straight (double millimeters) {
-set _create_distance(0);
-double createDistancemm = get_create_distance(0);
-if (millimeters > 0) {
-while (createDistancemm < millimeters) {
-create_drive_direct(50, 50); //vs might need to change to go straight
-msleep(100);
-create_stop();
-createDistancemm = get_create_distance(0);
-}
-}
-else if (millimeters == 0) {
-printf("did you mean to move 0 mm?");
-}
-else {
-	double negativeMm = -1*millimeters
-while (createDistancemm < negativeMm) {
-create_drive_direct(-50, -50); //vs might need to change to go straight
-msleep(100);
-create_stop();
-createDistancemm = get_create_distance([arg necessary?, if so use 0 to start]);
-}
-}
-return 0;
+void Backwards (double distance) {
+set_create_distance(0);
+    double actualDIST = 0;
+    while (actualDIST>distance) {
+    create_drive_direct(-70, -70);
+        msleep(50);
+        //printf("%lf\n", actualDIST);
+        actualDIST=(double) get_create_distance();
+    }
+    printf("final distance is :%lf\n", actualDIST);
 }
 
-//main script does the stuff
-int main () {
-//light sensor stuff to be added later
-create_connect();
-//Move from start box to pipe (I need specific movements)
-//Use arm to move first block to far holding area
-//Use arm to move second block to far holding area
-//Use arm to move third block to far holding area
-//Use arm to move fourth block to near holding area
-//Use arm to move fifth block to near holding area
-//Move ambulance? (I need specific movements)
-create_disconnect();
-return 0; }
+void Turn_Left (double angle) {
+    set_create_total_angle(0);
+    double actualANG = 0;
+    while (actualANG<angle) {
+    create_drive_direct (-70, 70);
+   msleep(50);
+    //printf("%lf\n", actualANG);
+    actualANG=(double) get_create_total_angle();
+    }
+    printf("final angle is :%lf\n", actualANG);
+}
+
+void Turn_Right (double angle) {
+set_create_total_angle(0);
+    double actualANG = 0;
+    while (actualANG>-angle) {
+        create_drive_direct (70, -70);
+        msleep(50);
+        //printf("%lf\n", actualANG);
+        actualANG=(double) get_create_total_angle();
+    }
+    printf("final angle is :%lf\n", actualANG);
+}
+  const int pause=100; //the msleeps easier to edit
+int main()
+{
+    wait_for_light(2); //calibrate light
+    printf("I see the light!/n"); 
+    shut_down_in(118); //sets shutdown
+    
+    create_connect(); //STARTING POSITION: with designated ruler, match 8 inches tape mark(on robot) with approx. 8 inches on ruler
+      create_full(); // disables safety features 
+    
+    
+    //taking the small yellow cube on the beginning tape and longy yellow to the farthest zone
+    Turn_Left(170);
+    Forward(170);
+    msleep(pause);
+    //Turn_Left(40);
+    //msleep(50);
+    //Forward(160);
+    //msleep(50);
+    Turn_Left(80);
+    msleep(pause);
+    Forward(560); // moves towards longy-yellow,, edit this value if running into hospitals
+    printf("hopefully not as forward as before\n"); 
+    msleep(pause);
+    Turn_Right(85);
+    msleep(pause);
+    Forward(400);//moves to furthest zone delivering block yellow and longy yellow
+    msleep(pause);
+    Turn_Right(10);//drops off block yellow and longy yellow
+    printf("brenda stop being annoying\n");
+    msleep(pause);
+    Turn_Left(10);
+    msleep(pause);
+    Backwards(-480);
+    printf("is it hitting the blue spot????????????????????????????????\n");
+    msleep(pause);
+    
+    //get blue block out of the way
+    Turn_Left(40);
+    printf("brenda be happy\n");
+    msleep(pause);
+    Forward(150);//change this value and other one to fix if arm is stuck on blue block
+    msleep(pause);
+    Turn_Right(40);
+    msleep(pause);
+    Backwards(-270);//this is the other value 
+    msleep(pause);
+    create_drive_direct(0,100);
+    msleep(3500);//if anyone wants to actually math this out they are welcome to but it works either way so yolo
+    printf("turn aroud axis???\n");
+    Backwards(-300);//get that annoying blue block OUT OF THE WAY 
+    //Forward(300);
+    msleep(pause);
+    
+    //whack-a-mole process with yellow block canister
+    create_drive_direct(0,-100);
+    msleep(1500); //again people are welcome to math it out, but this isn't supposed to be exactly 90 deg or perpendicular
+    printf("did it work????\n"); 
+    Forward(100); 
+    msleep(pause);
+    Turn_Right(60);
+    msleep(pause);
+    //Forward(50);
+    printf("please work!!!!!\n");
+    Turn_Left(110);
+    msleep(pause);
+    Turn_Right(110);
+    msleep(pause);
+    Turn_Left(110);
+    msleep(pause);
+    Turn_Right(110);
+    msleep(pause);
+    Turn_Left(110);
+    printf("whack a mole [-_-]\n"); 
+    
+    
+    msleep(pause);
+    
+    
+    //go to the firefighter pole and get firefighters
+    
+    
+    /*Turn_Left(90); //Turn Left 90
+    msleep(50); // pause for 50 millisec. 
+    Forward(100); // goes forward 
+    msleep(50); // pause for 50 millisec. 
+    Turn_Right(90); // turns at a 90 degree angle 
+    msleep(50);
+    Forward(50);
+    msleep(50);
+    Turn_Right(45);
+    msleep(50);
+    Forward(50);
+    msleep(50);
+    Turn_Left(45); 
+    msleep(50);
+    Forward(100);
+    msleep(50);
+    Turn_Right(45);
+    msleep(50); 
+    Forward(100);
+    msleep(50); 
+    Turn_Right(180);
+    msleep(50);
+    Forward(100); 
+    msleep(50);
+    Turn_Right(120);
+    msleep(50);
+    Forward(200);
+    msleep(50);*/
+
+    
+    printf("Hello World\n");
+    create_disconnect();
+    return 0;
+}
+ 
+
+
+
+
